@@ -62,32 +62,32 @@
 
     <script>
         // JavaScript code for fetching and displaying data
-        async function fetchData() {
-            try {
-                const response = await fetch('/api/data'); // Replace with your API endpoint
-                const data = await response.json();
-                const tableBody = document.getElementById('data-body');
-                const totalAmount = document.getElementById('total-amount');
+async function fetchData() {
+    try {
+        const response = await fetch('/'); // Fetch data from the root URL
+        const data = await response.json();
+        const tableBody = document.getElementById('data-body');
+        const totalAmount = document.getElementById('total-amount');
 
-                data.records.forEach(record => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${record.first_name}</td>
-                        <td>${record.username}</td>
-                        <td>${record.balanta}</td>
-                        <!-- Add more table data cells for your data -->
-                    `;
-                    tableBody.appendChild(row);
-                });
+        data.forEach(record => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${record.first_name}</td>
+                <td>${record.username}</td>
+                <td>${record.balanta}</td>
+                <!-- Add more table data cells for your data -->
+            `;
+            tableBody.appendChild(row);
+        });
 
-                totalAmount.textContent = `${data.sumab} 𝖓𝖊𝖑𝖊𝖎`;
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }
-        }
+        totalAmount.textContent = `${data.sumab} 𝖓𝖊𝖑𝖊𝖎`;
+    } catch (error) {
+        console.error('Error fetching data:', error);
+    }
+}
 
-        // Call the fetchData function to load data when the page loads
-        window.addEventListener('load', fetchData);
+// Call the fetchData function to load data when the page loads
+window.addEventListener('load', fetchData);
     </script>
 </body>
 </html>

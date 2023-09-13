@@ -24,12 +24,14 @@ app.get('/', async (req, res) => {
     // Release the database connection
     client.release();
 
-    res.render('index', { records, sumab });
+    // Send the data as JSON response
+    res.json({ records, sumab });
   } catch (err) {
     console.error('Error executing SQL queries:', err);
     res.status(500).send('Internal Server Error');
   }
 });
+
 
 app.listen(3000, () => {
   console.log('Server is running on port 3000');
