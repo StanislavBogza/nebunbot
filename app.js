@@ -1,38 +1,37 @@
-const express = require('express');
-const { Pool } = require('pg');
+// Replace the database URL with your PostgreSQL URL
+const databaseURL = "postgres://jjqnnppq:RrTvXMnxnjIlkFQGKHPlp276viZB567x@snuffleupagus.db.elephantsql.com/jjqnnppq";
 
-const app = express();
+const dataTable = document.getElementById("data-table").getElementsByTagName("tbody")[0];
 
-// Configure your PostgreSQL connection here
-const pool = new Pool({
-  connectionString: "postgres://jjqnnppq:RrTvXMnxnjIlkFQGKHPlp276viZB567x@snuffleupagus.db.elephantsql.com/jjqnnppq",
-});
+async function fetchData() {
+    try {
+        const response = await fetch(`/api/data`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
 
-app.get('/', async (req, res) => {
-  try {
-    // Connect to the PostgreSQL database
-    const client = await pool.connect();
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
 
-    // Execute a SQL query to retrieve data (replace 'mytable' with your table name)
-    const result = await client.query("SELECT * FROM cont_curent WHERE user_id != 666 ORDER BY balanta DESC");
-    const records = result.rows;
+        const data = await response.json();
 
-    // Execute a separate query to calculate the sum of balanta
-    const sumResult = await client.query("SELECT ROUND(SUM(balanta)) FROM cont_curent");
-    const sumab = sumResult.rows[0].round + " 𝖓𝖊𝖑𝖊𝖎";
+        // Clear the existing table rows
+        dataTable.innerHTML = '';
 
-    // Release the database connection
-    client.release();
+        // Populate the table with data
+        data.forEach(row => {
+            const newRow = dataTable.insertRow();
+            Object.values(row).forEach(value => {
+                const cell = newRow.insertCell();
+                cell.textContent = value;
+            });
+        });
+    } catch (error) {
+        console.error('Error fetching data:', error);
+    }
+}
 
-    // Send the data as JSON response
-    res.json({ records, sumab });
-  } catch (err) {
-    console.error('Error executing SQL queries:', err);
-    res.status(500).send('Internal Server Error');
-  }
-});
-
-
-app.listen(3000, () => {
-  console.log('Server is running on port 3000');
-});
+fetchData();
